@@ -68,7 +68,19 @@ export class ProductsService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    const deleteProduct = await this.productRepository.findOne({
+      where: { id },
+    });
+
+    if (!deleteProduct) {
+      throw new BadRequestException('El producto no existe...');
+    }
+
+    console.log(deleteProduct);
+
+    await this.productRepository.remove(deleteProduct);
+
+    return `El producto con el ID ${id} ha sido eliminado`;
   }
 }
